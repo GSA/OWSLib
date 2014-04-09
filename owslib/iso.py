@@ -341,10 +341,13 @@ class MD_DataIdentification(object):
             self.bbox = self.extent.boundingBox  # for backwards compatibility
 
             val = extent.find(util.nspath_eval('gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition', namespaces))
+            if val is None:
+                val = extent.find(util.nspath_eval('gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:beginPosition', namespaces))
             self.temporalextent_start = util.testXMLValue(val)
 
-            self.temporalextent_end = []
             val = extent.find(util.nspath_eval('gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition', namespaces))
+            if val is None:
+                val = extent.find(util.nspath_eval('gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod/gml32:endPosition', namespaces))
             self.temporalextent_end = util.testXMLValue(val)
 
 class MD_Distributor(object):        
