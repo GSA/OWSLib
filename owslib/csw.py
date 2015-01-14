@@ -336,6 +336,10 @@ class CatalogueServiceWeb:
                 
             if sortby is not None and isinstance(sortby, fes.SortBy):
                 node1.append(sortby)
+            # TODO temp fix to add some sortby. Otherwise the paginated
+            # results comes in unordered.
+            else:
+                fes.setsortby(node1, 'apiso:Modified')
 
             self.request = node0
 
