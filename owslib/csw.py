@@ -12,7 +12,6 @@
 import warnings
 import StringIO
 import random
-from urllib import urlencode
 from urllib2 import urlopen
 from owslib.etree import etree
 from owslib import fes
@@ -22,7 +21,7 @@ from owslib.iso import MD_Metadata
 from owslib.fgdc import Metadata
 from owslib.dif import DIF
 from owslib.namespaces import Namespaces
-from owslib.util import cleanup_namespaces, bind_url
+from owslib.util import cleanup_namespaces, bind_url_data
 
 # default variables
 outputformat = 'application/xml'
@@ -65,7 +64,7 @@ class CatalogueServiceWeb:
 
             data = {'service': self.service, 'version': self.version, 'request': 'GetCapabilities'}
 
-            self.request = '%s%s' % (bind_url(self.url), urlencode(data))
+            self.request = bind_url_data(self.url, data)
     
             self._invoke()
     
@@ -264,7 +263,7 @@ class CatalogueServiceWeb:
             'id': '',
         }
 
-        self.request = '%s%s%s' % (bind_url(self.url), urlencode(data), ','.join(id))
+        self.request = '%s%s' % (bind_url_data(self.url, data), ','.join(id))
 
         self._invoke()
  

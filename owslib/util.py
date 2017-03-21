@@ -423,22 +423,21 @@ a newline. This will extract out all of the keywords correctly.
     return remove_blank
 
 
-def bind_url(url):
-    """binds an HTTP GET query string endpiont"""
-    if url.find('?') == -1: # like http://host/wms
+def bind_url_data(url, data):
+    """binds url with data to form a good querystring"""
+    # remove any query items in url if it collides with what in data
+    url = urlparse.urlparse(url)
+    query = urlparse.parse_qs(url.query)
+    for key in list(query):
+        if key.lower() in data:
+            query.pop(key, None)
+    url = url._replace(query=urlencode(query, True))
+    url = urlparse.urlunparse(url)
+
+    if query:
+        binder = '&'
+    else:
         binder = '?'
 
-    # if like http://host/wms?foo=bar& or http://host/wms?foo=bar
-    if url.find('=') != -1:
-        if url.find('&', -1) != -1: # like http://host/wms?foo=bar&
-            binder = ''
-        else: # like http://host/wms?foo=bar
-            binder = '&'
+    return '%s%s%s' % (url, binder, urlencode(data))
 
-    # if like http://host/wms?foo
-    if url.find('?') != -1:
-        if url.find('?', -1) != -1: # like http://host/wms?
-            binder = ''
-        elif url.find('&', -1) == -1: # like http://host/wms?foo=bar
-            binder = '&'
-    return '%s%s' % (url, binder)
